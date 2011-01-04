@@ -1,1 +1,10 @@
-/home/ikke/.Xdefaults
+URxvt*termName: rxvt-256color
+URxvt*background: black
+URxvt*foreground: white
+URxvt*scrollBar: false
+URxvt.font:-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1 
+
+URxvt.perl-ext-common: default,matcher
+URxvt.urlLauncher: google-chrome
+!URxvt.matcher.rend.0: Uline Bold fg7
+URxvt.matcher.button: 1

@@ -1,0 +1,7 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/home/ikke/temp/mysqldiff-1.5.0/screens'
+let g:netrw_dirhist_2='/etc/resolvconf'
+let g:netrw_dirhist_3='/home/ikke/.IntelliJIdea90/config/colors/colors'
+let g:netrw_dirhist_4='/home/ikke/temp/loic/source'
+let g:netrw_dirhist_5='/home/ikke/temp/anontwit/anonTwitPics'

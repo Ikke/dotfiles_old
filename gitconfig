@@ -1,1 +1,9 @@
-/home/ikke/.gitconfig
+[user]
+	name = Kevin Daudt
+	email = compufreak@gmail.com
+[color]
+	status = auto
+	diff = auto
+	branch = auto
+	grep = auto
+	interactive = auto
