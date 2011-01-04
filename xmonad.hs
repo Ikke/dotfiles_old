@@ -1,0 +1,1 @@
+/home/ikke/.xmonad/xmonad.hs
