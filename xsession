@@ -18,4 +18,6 @@ dropbox start&
 
 urxvtd -q -f -o
 
+xrdb -merge /home/ikke/.Xresourses 
+
 exec xmonad
