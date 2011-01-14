@@ -1,7 +1,7 @@
 Config { font = "-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1"
        , bgColor = "black"
        , fgColor = "grey"
-       , position = Static { xpos = 0 , ypos = 0, width = 1255, height = 18 }
+       , position = Static { xpos = 110 , ypos = 0, width = 1170, height = 18 }
        , lowerOnStart = True
        , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10

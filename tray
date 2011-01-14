@@ -1,3 +1,3 @@
 #!/bin/bash
 
-trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand false --widthtype pixel --width 112 --height 18
+trayer --edge top --align left --SetDockType true --SetPartialStrut true --expand false --widthtype pixel --width 112 --height 18
