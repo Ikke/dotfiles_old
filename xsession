@@ -2,7 +2,8 @@
  
 # Set up an icon tray
  
-sh /home/ikke/tray&
+#sh /home/ikke/tray&
+stalonetray&
 
 if [ -x /usr/bin/nm-applet ] ; then
    nm-applet&
