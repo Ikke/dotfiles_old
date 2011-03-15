@@ -30,6 +30,8 @@ import System.IO (hPutStrLn)
 import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
 
+import Data.List (isSuffixOf)
+
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
@@ -241,12 +243,14 @@ myLayout = tiled ||| Full
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
+--
 myManageHook = composeAll
     [ className =? "MPlayer"        --> doFloat
     , className =? "Gimp"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore 
-    , className =? "stalonetray"    --> doIgnore]
+    , className =? "stalonetray"    --> doIgnore
+    ,  ("Taak eigenschappen bewerken" `isSuffixOf`) `fmap` stringProperty "WM_ICON_NAME" --> doFloat]
 
 ------------------------------------------------------------------------
 -- Event handling
