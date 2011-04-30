@@ -1,9 +1,8 @@
 #!/bin/bash
  
 # Set up an icon tray
- 
-#sh /home/ikke/tray&
-stalonetray&
+
+wmname LG3D
 
 if [ -x /usr/bin/nm-applet ] ; then
    nm-applet&
