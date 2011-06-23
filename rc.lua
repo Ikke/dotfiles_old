@@ -14,7 +14,7 @@ require("vicious")
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+beautiful.init("/usr/local/share/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
@@ -162,7 +162,7 @@ for s = 1, screen.count() do
         mytextclock,
         s == 2 and mysystray or nil,
         batwidget,
-        cpuwidget,
+        cpuwidget.widget,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
