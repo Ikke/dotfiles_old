@@ -160,7 +160,7 @@ for s = 1, screen.count() do
         },
         mylayoutbox[s],
         mytextclock,
-        s == 2 and mysystray or nil,
+        s == screen.count() and mysystray or nil,
         batwidget,
         cpuwidget.widget,
         mytasklist[s],

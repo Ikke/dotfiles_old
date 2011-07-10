@@ -33,3 +33,5 @@ export ALTERNATE_EDITOR=""
 alias em='emacsclient -c'
 
 fortune | cowsay
+
+alias thesis=~/Dropbox/afstuderen/scriptie/draft/thesis
