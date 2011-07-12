@@ -7,14 +7,11 @@ require("beautiful")
 -- Notification library
 require("naughty")
 
--- Load Debian menu entries
-require("debian.menu")
-
 require("vicious")
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/usr/local/share/awesome/themes/default/theme.lua")
+beautiful.init("/usr/share/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
@@ -61,7 +58,6 @@ myawesomemenu = {
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "Debian", debian.menu.Debian_menu.Debian },
                                     { "open terminal", terminal }
                                   }
                         })
@@ -160,7 +156,7 @@ for s = 1, screen.count() do
         },
         mylayoutbox[s],
         mytextclock,
-        s == 2 and mysystray or nil,
+        s == screen.count() and mysystray or nil,
         batwidget,
         cpuwidget.widget,
         mytasklist[s],
