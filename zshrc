@@ -33,3 +33,7 @@ export ALTERNATE_EDITOR=""
 alias em='emacsclient -c'
 
 fortune | cowsay
+
+#Fixing the Home and End key (use C-v key to find the specific code of the key)
+bindkey "^[[7~" beginning-of-line
+bindkey "^[[8~" end-of-line

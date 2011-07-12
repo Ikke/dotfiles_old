@@ -10,3 +10,7 @@ URxvt.urlLauncher: google-chrome
 URxvt.keysym.M-u: perl:url-select:select_next
 !URxvt.matcher.rend.0: Uline Bold fg7
 URxvt.matcher.button: 1
+
+!Fixing Home and End key (use Ctrl-V + key to find the code of the specific key)
+URxvt*keysym.Home: \033[7~
+URxvt*keysym.End: \033[8~
