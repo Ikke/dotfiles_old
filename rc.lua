@@ -9,6 +9,8 @@ require("naughty")
 
 require("vicious")
 
+require("audio")
+
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
 beautiful.init("/usr/share/awesome/themes/default/theme.lua")
@@ -222,9 +224,12 @@ globalkeys = awful.util.table.join(
     -- Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
     awful.key({modkey }, "p", function() awful.util.spawn( "dmenu_run" ) end),
-    awful.key({ modkey },            "x",     function () mypromptbox[mouse.screen]:run() end)
+    awful.key({ modkey },            "x",     function () mypromptbox[mouse.screen]:run() end),
 
-    
+    awful.key({ }, "XF86AudioMute", audio.toggle_mute),
+	awful.key({ }, "XF86AudioLowerVolume", audio.softer),
+ 	awful.key({ }, "XF86AudioRaiseVolume", audio.louder),
+	awful.key({ modkey }, "z", audio.toggle_mute)
     --awful.key({ modkey }, "x",
     --          function ()
     --              awful.prompt.run({ prompt = "Run Lua code: " },
