@@ -17,7 +17,7 @@ export ZSH_THEME="kennethreitz"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git command-not-found git-flow)
+plugins=(git git-flow)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -32,7 +32,7 @@ export COLUMNS=$COLUMNS
 export ALTERNATE_EDITOR=""
 alias em='emacsclient -c'
 
-fortune | cowsay
+alias thesis=~/Dropbox/afstuderen/scriptie/draft/thesis
 
 #Fixing the Home and End key (use C-v key to find the specific code of the key)
 bindkey "^[[7~" beginning-of-line
