@@ -28,6 +28,7 @@ export LEDGER_FILE=/home/ikke/documents/boekhouding.dat
 
 export EDITOR=/usr/bin/vim
 export COLUMNS=$COLUMNS
+export BROWSER=google-chrome
 
 export ALTERNATE_EDITOR=""
 alias em='emacsclient -c'
