@@ -83,7 +83,25 @@ cpuwidget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
 vicious.register(cpuwidget, vicious.widgets.cpu, "$1")
 
 batwidget = widget({ type = "textbox" })
-vicious.register(batwidget, vicious.widgets.bat, " | $1 $2 |", 1,"BAT0")
+vicious.register(batwidget, vicious.widgets.bat, "| $1 $2 ", 1,"BAT0")
+
+-- {{{ CPU temperature
+thermalwidget  = widget({ type = "textbox" })
+vicious.register(thermalwidget, vicious.widgets.thermal, "| $1°C ", 15, "thermal_zone0")
+-- }}}
+
+-- {{{ CPU Frequency
+cpufreqwidget0 = widget({ type = "textbox" })
+vicious.register(cpufreqwidget0, vicious.widgets.cpufreq, "$1 Mhz ", 10, "cpu0")
+
+cpufreqwidget1 = widget({ type = "textbox" })
+vicious.register(cpufreqwidget1, vicious.widgets.cpufreq, "| $1, ", 10, "cpu1")
+-- }}}                                                                            
+
+-- {{{ Volume widget
+
+volumewidget = widget({ type = "textbox" })
+vicious.register(volumewidget, vicious.widgets.volume, "| $1$2 ", 0.1, "Master")
 
 -- Create a systray
 mysystray = widget({ type = "systray" })
@@ -159,6 +177,10 @@ for s = 1, screen.count() do
         mylayoutbox[s],
         mytextclock,
         s == screen.count() and mysystray or nil,
+        volumewidget,
+        cpufreqwidget0,
+        cpufreqwidget1,
+        thermalwidget,
         batwidget,
         cpuwidget.widget,
         mytasklist[s],
