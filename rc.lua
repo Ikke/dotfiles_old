@@ -10,13 +10,14 @@ require("naughty")
 require("vicious")
 
 require("audio")
+require('spotify')
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+beautiful.init("/home/ikke/.config/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt"
+terminal = "urxvtc"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -26,6 +27,8 @@ editor_cmd = terminal .. " -e " .. editor
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
+
+naughty.config.default_preset.screen = 1
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 layouts =
@@ -176,7 +179,7 @@ for s = 1, screen.count() do
         },
         mylayoutbox[s],
         mytextclock,
-        s == screen.count() and mysystray or nil,
+        s == 1 and mysystray or nil,
         volumewidget,
         cpufreqwidget0,
         cpufreqwidget1,
@@ -213,7 +216,6 @@ globalkeys = awful.util.table.join(
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show(true)        end),
 
     -- Layout manipulation
     awful.key({ modkey, "Control" }, "j", function () awful.client.swap.byidx(  1)    end),
