@@ -8,4 +8,11 @@
 	grep = auto
 	interactive = auto
 [core]
-	excludesfile = /home/ikke/.gitignore
+	excludesfile = /home/ikke/.gitexcludes
+[alias]
+	diff = diff --word-diff
+	status = status -sb
+	st = status -sb
+	log = git log --decorate
+[push]
+	default = upstream
