@@ -326,6 +326,8 @@ clientbuttons = awful.util.table.join(
 root.keys(globalkeys)
 -- }}}
 
+previous_client = nil
+
 -- {{{ Rules
 awful.rules.rules = {
     -- All clients will match this rule.
@@ -357,7 +359,13 @@ client.add_signal("manage", function (c, startup)
     c:add_signal("mouse::enter", function(c)
         if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
             and awful.client.focus.filter(c) then
-            client.focus = c
+            if c.class ~= "jetbrains-idea" then
+                client.focus = c
+                previous_client = c
+            elseif previous_client and previous_client.class ~= "jetbrains-idea" and previous_client.type ~= "dialog" then
+                client.focus = c
+                previous_client = c
+            end
         end
     end)
 
