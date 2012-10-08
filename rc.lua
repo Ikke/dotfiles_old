@@ -85,6 +85,20 @@ cpuwidget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
 -- Register widget
 vicious.register(cpuwidget, vicious.widgets.cpu, "$1")
 
+-- Initialize widget
+memwidget = awful.widget.graph()
+-- Graph properties
+memwidget:set_width(50)
+memwidget:set_background_color("#494B4F")
+memwidget:set_color("#FF5656")
+memwidget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
+-- Register widget
+vicious.register(memwidget, vicious.widgets.mem, "$1")
+
+memtwidget = widget({ type = "textbox"})
+vicious.register(memtwidget, vicious.widgets.mem, "| $1% ")
+
+
 batwidget = widget({ type = "textbox" })
 vicious.register(batwidget, vicious.widgets.bat, "| $1 $2 ", 1,"BAT0")
 
