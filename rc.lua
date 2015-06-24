@@ -1,16 +1,44 @@
 -- Standard awesome library
-require("awful")
+awful = require("awful")
 require("awful.autofocus")
-require("awful.rules")
+awful.rules = require("awful.rules")
 -- Theme handling library
-require("beautiful")
+beautiful = require("beautiful")
 -- Notification library
-require("naughty")
+naughty = require("naughty")
 
-require("vicious")
+vicious = require("vicious")
+wibox = require("wibox")
 
-require("audio")
-require('spotify')
+audio = require("audio")
+spotify = require('spotify')
+
+local gears = require("gears")
+local menubar = require("menubar")
+
+-- {{{ Error handling
+-- Check if awesome encountered an error during startup and fell back to
+-- another config (This code will only ever execute for the fallback config)
+if awesome.startup_errors then
+    naughty.notify({ preset = naughty.config.presets.critical,
+                     title = "Oops, there were errors during startup!",
+                     text = awesome.startup_errors })
+end
+
+-- Handle runtime errors after startup
+do
+    local in_error = false
+    awesome.connect_signal("debug::error", function (err)
+        -- Make sure we don't go into an endless error loop
+        if in_error then return end
+        in_error = true
+
+        naughty.notify({ preset = naughty.config.presets.critical,
+                         title = "Oops, an error happened!",
+                         text = err })
+        in_error = false
+    end)
+end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
@@ -18,7 +46,7 @@ beautiful.init("/home/ikke/.config/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvtc"
-editor = os.getenv("EDITOR") or "editor"
+editor = os.getenv("EDITOR") or "vi"
 editor_cmd = terminal .. " -e " .. editor
 
 -- Default modkey.
@@ -27,8 +55,6 @@ editor_cmd = terminal .. " -e " .. editor
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
-
-naughty.config.default_preset.screen = 1
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 layouts =
@@ -44,6 +70,15 @@ layouts =
     awful.layout.suit.magnifier
 }
 -- }}}
+
+-- {{{ Wallpaper
+if beautiful.wallpaper then
+    for s = 1, screen.count() do
+        gears.wallpaper.centered(beautiful.wallpaper, s, "#000000")
+    end
+end
+-- }}}
+
 
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
@@ -67,13 +102,13 @@ mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesom
                                   }
                         })
 
-mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
+mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
 -- }}}
 
 -- {{{ Wibox
 -- Create a textclock widget
-mytextclock = awful.widget.textclock({ align = "right" })
+mytextclock = awful.widget.textclock()
 
 -- Initialize widget
 cpuwidget = awful.widget.graph()
@@ -81,7 +116,7 @@ cpuwidget = awful.widget.graph()
 cpuwidget:set_width(50)
 cpuwidget:set_background_color("#494B4F")
 cpuwidget:set_color("#FF5656")
-cpuwidget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
+cpuwidget:set_color({ type = "linear" , from = {0, 0}, to = {0, 20}, stops= { {0, "#FF5656"}, {0.5, "#88A175"}, {1, "#AECF96"} }})
 -- Register widget
 vicious.register(cpuwidget, vicious.widgets.cpu, "$1")
 
@@ -91,37 +126,43 @@ memwidget = awful.widget.graph()
 memwidget:set_width(50)
 memwidget:set_background_color("#494B4F")
 memwidget:set_color("#FF5656")
-memwidget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
+memwidget:set_color({ type = "linear" , from = {0, 0}, to = {0, 20}, stops= { {0, "#FF5656"}, {0.5, "#88A175"}, {1, "#AECF96"} }})
 -- Register widget
 vicious.register(memwidget, vicious.widgets.mem, "$1")
 
-memtwidget = widget({ type = "textbox"})
+memtwidget = wibox.widget.textbox()
 vicious.register(memtwidget, vicious.widgets.mem, "| $1% ")
 
 
-batwidget = widget({ type = "textbox" })
-vicious.register(batwidget, vicious.widgets.bat, "| $1 $2 ", 1,"BAT0")
+batwidget = wibox.widget.textbox()
+vicious.register(batwidget, vicious.widgets.bat, "$1 $2 ", 15,"BAT0")
 
 -- {{{ CPU temperature
-thermalwidget  = widget({ type = "textbox" })
-vicious.register(thermalwidget, vicious.widgets.thermal, "| $1°C ", 15, "thermal_zone0")
+thermalwidget  = wibox.widget.textbox()
+vicious.register(thermalwidget, vicious.widgets.thermal, "| $1°C ", 5, "thermal_zone0")
 -- }}}
 
 -- {{{ CPU Frequency
-cpufreqwidget0 = widget({ type = "textbox" })
-vicious.register(cpufreqwidget0, vicious.widgets.cpufreq, "$1 Mhz ", 10, "cpu0")
+cpufreqwidget0 = wibox.widget.textbox()
+vicious.register(cpufreqwidget0, vicious.widgets.cpufreq, "| $1", 15, "cpu0")
 
-cpufreqwidget1 = widget({ type = "textbox" })
-vicious.register(cpufreqwidget1, vicious.widgets.cpufreq, "| $1, ", 10, "cpu1")
+cpufreqwidget1 = wibox.widget.textbox()
+vicious.register(cpufreqwidget1, vicious.widgets.cpufreq, " $1 Mhz ", 15, "cpu1")
 -- }}}                                                                            
 
 -- {{{ Volume widget
 
-volumewidget = widget({ type = "textbox" })
-vicious.register(volumewidget, vicious.widgets.volume, "| $1$2 ", 0.1, "Master")
+volumewidget = wibox.widget.textbox()
+-- vicious.register(volumewidget, vicious.widgets.volume, "| $1$2 ", 1, "Master")
 
--- Create a systray
-mysystray = widget({ type = "systray" })
+spacerwidget = wibox.widget.textbox()
+spacerwidget:set_text(" ")
+
+vpnwidget = wibox.widget.textbox()
+vicious.register(vpnwidget, vicious.widgets.vpn, '<span color="#00FF00"> $1 </span>', 15)
+
+wifiwidget = wibox.widget.textbox()
+vicious.register(wifiwidget, vicious.widgets.wifi, "| ${ssid} ", 15, "wlan0")
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -133,18 +174,23 @@ mytaglist.buttons = awful.util.table.join(
                     awful.button({ modkey }, 1, awful.client.movetotag),
                     awful.button({ }, 3, awful.tag.viewtoggle),
                     awful.button({ modkey }, 3, awful.client.toggletag),
-                    awful.button({ }, 4, awful.tag.viewnext),
-                    awful.button({ }, 5, awful.tag.viewprev)
+                    awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
+                    awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
                     )
 mytasklist = {}
 mytasklist.buttons = awful.util.table.join(
                      awful.button({ }, 1, function (c)
-                                              if not c:isvisible() then
-                                                  awful.tag.viewonly(c:tags()[1])
-                                              end
-                                              client.focus = c
-                                              c:raise()
-                                          end),
+                                            if c == client.focus then
+                                                c.minimized = true
+                                            else
+                                                c.minimized = false
+                                                if not c:isvisible() then
+                                                    awful.tag.viewonly(c:tags()[1])
+                                                end
+                                                client.focus = c
+                                                c:raise()
+                                            end
+                                        end),
                      awful.button({ }, 3, function ()
                                               if instance then
                                                   instance:hide()
@@ -164,7 +210,7 @@ mytasklist.buttons = awful.util.table.join(
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
-    mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
+    mypromptbox[s] = awful.widget.prompt()
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     mylayoutbox[s] = awful.widget.layoutbox(s)
@@ -174,35 +220,40 @@ for s = 1, screen.count() do
                            awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
                            awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
     -- Create a taglist widget
-    mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, mytaglist.buttons)
+    mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
 
     -- Create a tasklist widget
-    mytasklist[s] = awful.widget.tasklist(function(c)
-                                              return awful.widget.tasklist.label.currenttags(c, s)
-                                          end, mytasklist.buttons)
+    mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
     -- Create the wibox
     mywibox[s] = awful.wibox({ position = "top", screen = s })
-    -- Add widgets to the wibox - order matters
-    mywibox[s].widgets = {
-        {
-            mylauncher,
-            mytaglist[s],
-            mypromptbox[s],
-            layout = awful.widget.layout.horizontal.leftright
-        },
-        mylayoutbox[s],
-        mytextclock,
-        s == 1 and mysystray or nil,
-        volumewidget,
-        cpufreqwidget0,
-        cpufreqwidget1,
-        thermalwidget,
-        batwidget,
-        cpuwidget.widget,
-        mytasklist[s],
-        layout = awful.widget.layout.horizontal.rightleft
-    }
+
+    local left_layout = wibox.layout.fixed.horizontal()
+    left_layout:add(mylauncher)
+    left_layout:add(mytaglist[s])
+    left_layout:add(mypromptbox[s])
+
+    local right_layout = wibox.layout.fixed.horizontal()
+    right_layout:add(memwidget)
+    right_layout:add(spacerwidget)
+    right_layout:add(cpuwidget)
+    right_layout:add(batwidget)
+    right_layout:add(memtwidget)
+    right_layout:add(thermalwidget)
+    right_layout:add(cpufreqwidget0)
+    right_layout:add(cpufreqwidget1)
+    right_layout:add(wifiwidget)
+    right_layout:add(vpnwidget)
+    if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(mytextclock)
+    right_layout:add(mylayoutbox[s])
+    
+    local layout = wibox.layout.align.horizontal()
+    layout:set_left(left_layout)
+    layout:set_middle(mytasklist[s])
+    layout:set_right(right_layout)
+    
+    mywibox[s]:set_widget(layout)
 end
 -- }}}
 
@@ -262,12 +313,29 @@ globalkeys = awful.util.table.join(
     -- Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
     awful.key({modkey }, "p", function() awful.util.spawn( "dmenu_run" ) end),
+    -- awful.key({modkey}, "p", function () menubar.show() end),
     awful.key({ modkey },            "x",     function () mypromptbox[mouse.screen]:run() end),
 
     awful.key({ }, "XF86AudioMute", audio.toggle_mute),
 	awful.key({ }, "XF86AudioLowerVolume", audio.softer),
  	awful.key({ }, "XF86AudioRaiseVolume", audio.louder),
-	awful.key({ modkey }, "z", audio.toggle_mute)
+	awful.key({ modkey }, "z", audio.toggle_mute),
+
+  awful.key({ modkey }, 's', spotify.play_pause),
+  awful.key({ }, 'XF86AudioPlay', spotify.play_pause),
+  awful.key({ }, "XF86AudioForward", spotify.next),
+  awful.key({ modkey }, 'd', spotify.next),
+  awful.key({ modkey }, 'a', spotify.previous),
+  awful.key({ }, "XF86AudioRewind", spotify.previous),
+  
+  awful.key({ modkey, "Shift" }, "a", function () awful.util.spawn('keepass --auto-type') end ),
+  
+  awful.key({ modkey }, 'q', function () awful.util.spawn('xsetwacom --set "Wacom Bamboo1 stylus" MapToOutput VGA-0') end ),
+  awful.key({ modkey }, 'w', function () awful.util.spawn('xsetwacom --set "Wacom Bamboo1 stylus" MapToOutput 2646x1024+0+0') end ),
+  awful.key({ modkey }, 'e', function () awful.util.spawn('xsetwacom --set "Wacom Bamboo1 stylus" MapToOutput LVDS') end ),
+  awful.key({ modkey }, 'c', function () awful.util.spawn('scrot -s veendam.png') end ) 
+  
+
     --awful.key({ modkey }, "x",
     --          function ()
     --              awful.prompt.run({ prompt = "Run Lua code: " },
@@ -280,10 +348,9 @@ globalkeys = awful.util.table.join(
 clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
-    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
+    awful.key({ modkey, "Control" }, "space",  function (c) c.ontop = not c.ontop  end),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
-    awful.key({ modkey, "Shift"   }, "r",      function (c) c:redraw()                       end),
     awful.key({ modkey,           }, "n",      function (c) c.minimized = not c.minimized    end),
     awful.key({ modkey,           }, "m",
         function (c)
@@ -365,21 +432,22 @@ awful.rules.rules = {
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
-client.add_signal("manage", function (c, startup)
+client.connect_signal("manage", function (c, startup)
     -- Add a titlebar
     -- awful.titlebar.add(c, { modkey = modkey })
 
     -- Enable sloppy focus
-    c:add_signal("mouse::enter", function(c)
+    c:connect_signal("mouse::enter", function(c)
         if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
             and awful.client.focus.filter(c) then
-            if c.class ~= "jetbrains-idea" then
-                client.focus = c
-                previous_client = c
-            elseif previous_client and previous_client.class ~= "jetbrains-idea" and previous_client.type ~= "dialog" then
-                client.focus = c
-                previous_client = c
-            end
+              client.focus = c
+--            if c.class ~= "jetbrains-idea" then
+--                client.focus = c
+--                previous_client = c
+--            elseif previous_client and previous_client.class ~= "jetbrains-idea" and previous_client.type ~= "dialog" then
+--                client.focus = c
+--                previous_client = c
+--            end
         end
     end)
 
@@ -396,6 +464,6 @@ client.add_signal("manage", function (c, startup)
     end
 end)
 
-client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
